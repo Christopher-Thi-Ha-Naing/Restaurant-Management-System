@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 		
 		log.info("User Sign Up request received: {}",request);
 		validation.UserSignUpValidation(request);
-		User user
+		User user = userDao.findByEmail(request.get("email"));
 		return null;
 	}
 
