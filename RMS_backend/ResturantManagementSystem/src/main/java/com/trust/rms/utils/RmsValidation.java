@@ -3,9 +3,11 @@ package com.trust.rms.utils;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import com.trust.rms.exception.FieldRequiredException;
 
+@Service
 public class RmsValidation {
 	
 	HttpStatus badRequest = HttpStatus.BAD_REQUEST;

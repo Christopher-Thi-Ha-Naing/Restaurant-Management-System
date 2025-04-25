@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trust.rms.api.UserApi;
 import com.trust.rms.constants.RmsConstants;
+import com.trust.rms.exception.AlreadyExistException;
+import com.trust.rms.exception.FieldRequiredException;
 import com.trust.rms.service.UserService;
 import com.trust.rms.utils.RmsUtils;
 
@@ -22,6 +24,10 @@ public class UserApiImpl implements UserApi {
 	public ResponseEntity<String> signUp(Map<String, String> request) {
 		try {
 			return userService.signUp(request);	
+		}catch(FieldRequiredException e) {
+			return RmsUtils.getResponseEntity(e.getMessage(), e.getStatus());
+		}catch(AlreadyExistException e) {
+			return RmsUtils.getResponseEntity(e.getMessage(), e.getStatus());
 		}catch(Exception e){
 			return RmsUtils.getResponseEntity(RmsConstants.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
