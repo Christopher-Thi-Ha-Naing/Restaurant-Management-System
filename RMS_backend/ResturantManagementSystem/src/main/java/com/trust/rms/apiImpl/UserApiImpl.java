@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trust.rms.api.UserApi;
+import com.trust.rms.api.UserController;
 import com.trust.rms.constants.RmsConstants;
 import com.trust.rms.exception.AlreadyExistException;
 import com.trust.rms.exception.FieldRequiredException;
@@ -15,7 +15,7 @@ import com.trust.rms.service.UserService;
 import com.trust.rms.utils.RmsUtils;
 
 @RestController
-public class UserApiImpl implements UserApi {
+public class UserApiImpl implements UserController {
 	
 	@Autowired
 	private UserService userService;

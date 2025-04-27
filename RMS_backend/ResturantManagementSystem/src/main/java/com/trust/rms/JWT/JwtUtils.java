@@ -20,6 +20,8 @@ public class JwtUtils {
 	@Value("${jwt.secret}")
 	private String secretKey;
 	
+	private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 5; // 5 hours
+	
 	public String extractUserName(String token) {
 		return extractClaims(token, Claims::getSubject);
 	}
@@ -57,7 +59,7 @@ public class JwtUtils {
 				.setClaims(claims)
 				.setSubject(subject)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 5))
+				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS256,secretKey).compact();
 	}
 
