@@ -3,13 +3,12 @@ package com.trust.rms.apiImpl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,25 +16,30 @@ import com.trust.rms.JWT.AuthRequest;
 import com.trust.rms.JWT.CustomerUsersDetailService;
 import com.trust.rms.JWT.JwtUtils;
 import com.trust.rms.api.AuthController;
+import com.trust.rms.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthControllerImpl implements AuthController {
 	
-	@Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private JwtUtils jwtUtils;
-    
-    @Autowired
-    private CustomerUsersDetailService customerUsersDetailService;
-    
-    
+    private UserService userService;
+  
+	public AuthControllerImpl(final AuthenticationManager authenticationManager, final JwtUtils jwtUtils,
+			final CustomerUsersDetailService customerUsersDetailService, final UserService userService) {
+		this.authenticationManager = authenticationManager;
+		this.jwtUtils = jwtUtils;
+		this.userService = userService;
+	}
 
+	@PostMapping("/login")
 	@Override
 	public ResponseEntity<Map<String, String>> login(AuthRequest authRequest) {
+		log.info("Authentication API request received : {}",authRequest);
 		
 		Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
@@ -50,25 +54,14 @@ public class AuthControllerImpl implements AuthController {
 	        // Prepare response
 	        Map<String, String> response = new HashMap<>();
 	        response.put("token", token);
-	        response.put("username", user.getName()); // or getEmail() if you prefer
-	        response.put("role", user.getRole().getName()); // Assuming Role is a separate entity
+	        response.put("username", user.getName());
+	        response.put("role", user.getRole().getName());
 	        
 	        return ResponseEntity.ok(response);
 	    } else {
 	        throw new UsernameNotFoundException("Invalid credentials");
 	    }
-		}
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        com.trust.rms.models.User user = customerUsersDetailService.getUserDetail();
-        String token = jwtUtils.generateToken(user.getEmail(), user.getRole().getName());
 
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        response.put("username", user.getName());
-        response.put("role", user.getRole().getName());
-        
-        
-        return ResponseEntity.ok(response);
-    }
+   }
 
 }

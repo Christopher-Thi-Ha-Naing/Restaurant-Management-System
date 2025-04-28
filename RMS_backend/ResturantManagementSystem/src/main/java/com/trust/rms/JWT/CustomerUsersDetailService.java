@@ -1,10 +1,10 @@
 package com.trust.rms.JWT;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,12 +26,17 @@ public class CustomerUsersDetailService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		log.info("Inside loadUserByUserName {}", username);
-		userDetail = userDao.findByEmail(username);
-		if(!Objects.isNull(userDetail)) {
-			return new User(userDetail.getEmail(), userDetail.getPassword(), new ArrayList<>());
-		}else {
-			throw new UsernameNotFoundException("User not found.");
-		}
+		com.trust.rms.models.User user = userDao.findByEmail(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                authorities
+        );
 	}
 	
 	public com.trust.rms.models.User getUserDetail(){
