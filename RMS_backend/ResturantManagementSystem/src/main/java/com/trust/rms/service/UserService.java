@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.trust.rms.DTO.UserDto;
 import com.trust.rms.exception.AlreadyExistException;
@@ -13,7 +12,7 @@ import com.trust.rms.models.User;
 
 public interface UserService {
 
-	ResponseEntity<String> signUp(Map<String, String> request) throws FieldRequiredException, AlreadyExistException;
+	User signUp(Map<String, String> request) throws FieldRequiredException, AlreadyExistException;
 
 	String getRoleByEmail(String email);
 
@@ -21,6 +20,6 @@ public interface UserService {
 	
 	ResponseEntity<List<UserDto>> getAllUser();
 	
-	public ResponseEntity<String> updateUser(Map<String, String> request);
+	User updateUser(Map<String, String> request);
 
 }

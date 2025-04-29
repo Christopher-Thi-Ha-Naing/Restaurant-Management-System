@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +21,7 @@ import com.trust.rms.exception.ResourceNotFoundException;
 import com.trust.rms.models.Role;
 import com.trust.rms.models.User;
 import com.trust.rms.service.UserService;
+import com.trust.rms.utils.Auditable;
 import com.trust.rms.utils.RmsUtils;
 import com.trust.rms.utils.RmsValidation;
 
@@ -47,7 +47,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<String> signUp(Map<String, String> request) 
+	@Auditable(action = "CREATE")
+	public User signUp(Map<String, String> request) 
 			throws FieldRequiredException, AlreadyExistException {
 		
 		log.info("User Service Sign Up request received : {}",request);
@@ -56,16 +57,14 @@ public class UserServiceImpl implements UserService {
 		
 		if(Objects.isNull(user)) {
 			user = RmsUtils.mapToEntity(request, User.class);
-			Integer roleId = Integer.parseInt(request.get("roleId"));
-			Role role = roleDao.findById(roleId)
-			        .orElseThrow(() -> new FieldRequiredException("Invalid Role ID"));
-			user.setRole(role);
+			Role defaultRole = roleDao.findByName("USER")
+				    .orElseThrow(() -> new FieldRequiredException("Default role USER not found"));
+				user.setRole(defaultRole);
 			user.setPassword(passwordEncoder.encode(request.get("password")));
-			userDao.save(user);
+			return userDao.save(user);
 		}else {
 			throw new AlreadyExistException("Email");
 		}
-		return RmsUtils.getResponseEntity("Successfully Registered", HttpStatus.OK);
 	}
 
 	@Override
@@ -99,7 +98,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public ResponseEntity<String> updateUser(Map<String, String> request) {
+	@Auditable(action = "UPDATE")
+	public User updateUser(Map<String, String> request) {
 		Integer id = Integer.parseInt(request.get("id")); // make sure 'id' key exists
 
 	    Optional<User> optionalUser = userDao.findById(id);
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
 	    userDao.save(user);
 
-	    return ResponseEntity.ok("User updated successfully!");
+	    return userDao.save(user);
 	}
 
 }

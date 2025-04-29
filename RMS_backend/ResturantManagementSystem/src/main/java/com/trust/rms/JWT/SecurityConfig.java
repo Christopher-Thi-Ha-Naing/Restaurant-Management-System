@@ -32,6 +32,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll() //Login
                 .requestMatchers("/user/signup").permitAll() //SignUp
                 .requestMatchers("/user/forgotPassword").permitAll() //ForgotPassword
+                .requestMatchers("/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/swagger-resources/**",
+                        "/webjars/**").permitAll() //Swagger
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -38,7 +38,7 @@ public class User implements Serializable {
     @Column(name="password", nullable = false)
     private String password;
 
-    @Column(name="phone")
+    @Column(name="phone", unique = true)
     private String phone;
 
     @Column(name="address")
@@ -49,7 +49,7 @@ public class User implements Serializable {
     private Role role;
     
     @Enumerated(EnumType.STRING)
-    @Column(name="status", columnDefinition = "VARCHAR(20) DEFAULT 'ACTIVE'")
+    @Column(name="status", columnDefinition = "VARCHAR(20) DEFAULT 'PENDING'")
     private UserStatus status;
 
 
