@@ -11,9 +11,11 @@ import com.trust.rms.JWT.AuthRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 
 @RequestMapping("/api/auth")
+@Tag(name = "Login API", description = "Operations related to Login")
 public interface AuthController {
 	
 	@Operation(summary = "User Login", description = "Authenticate user and return JWT token")

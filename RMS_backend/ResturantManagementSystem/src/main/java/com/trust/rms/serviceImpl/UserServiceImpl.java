@@ -100,8 +100,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Auditable(action = "UPDATE")
 	public User updateUser(Map<String, String> request) {
-		Integer id = Integer.parseInt(request.get("id")); // make sure 'id' key exists
-
+		Integer id = Integer.parseInt(request.get("id")); 
 	    Optional<User> optionalUser = userDao.findById(id);
 	    if (!optionalUser.isPresent()) {
 	        throw new ResourceNotFoundException("User not found with id: " + id);

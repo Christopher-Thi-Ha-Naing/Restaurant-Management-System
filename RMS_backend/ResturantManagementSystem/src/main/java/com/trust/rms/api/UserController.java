@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "User API", description = "Operations related to users")
 public interface UserController {
 	
+	@Operation(summary = "User SignUp", description = "Register the new user, Do not requires Authorization header.")
 	@PostMapping(path= "/signup")
 	public ResponseEntity<String> signUp(@RequestBody(required = true) Map<String,String> request);
 	
@@ -38,7 +39,7 @@ public interface UserController {
 	    ) @RequestBody(required = true) Map<String,String> request);
 	
 	
-	@Operation(summary = "Get all users", description = "Returns a list of all registered users")
+	@Operation(summary = "Get all users", description = "Returns a list of all registered users. Need to be Admin level User")
 	@GetMapping(path="/getAllUser")
 	public ResponseEntity<List<UserDto>> getAllUser();
 

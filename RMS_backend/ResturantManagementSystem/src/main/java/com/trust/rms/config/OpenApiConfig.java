@@ -1,4 +1,4 @@
-package com.trust.rms.utils;
+package com.trust.rms.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
